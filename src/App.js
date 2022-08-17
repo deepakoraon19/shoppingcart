@@ -1,17 +1,19 @@
-import logo from "./logo.svg";
+
 import "./App.css";
-import { useEffect, useState, useRef, useReducer } from "react";
+import React,{ useEffect, useState, useRef, useReducer, useContext} from "react";
 import Item from "./components/Item";
-import { cartReducer } from "./reducers/cartReducer";
+// import { cartReducer } from "./reducers/cartReducer";
+
+export const cartContext = React.createContext()
 
 function App() {
   let [products, setProducts] = useState([]);
   let data1 = useRef(null);
   let [text, setText] = useState("");
-  let [cart, dispatch] = useReducer(cartReducer, []);
+  // let [cart, dispatch] = useReducer(cartReducer, []);
   let [loading, setLoading] = useState(false);
-
-  
+  let [cart,setCart] = useState(["Products"])
+  // let cartContext = useContext();
   const fetchData = async () => {
     let res = await fetch("https://fakestoreapi.com/products");
     let data = await res.json();
@@ -45,12 +47,15 @@ function App() {
   if (loading === true) {
     return (
       <>
-        <div className="cart">{cart}</div>
+      <cartContext.Provider value={{cartC:[cart,setCart]}} >
+      <div className="cart">{cart}</div>
         <div className="container">
           {products.map((product) => (
             <Item key={product.id} product={product}></Item>
           ))}
         </div>
+      </cartContext.Provider>
+        
       </>
     );
   } else {
@@ -58,4 +63,5 @@ function App() {
   }
 }
 
+// export cartContext;
 export default App;
